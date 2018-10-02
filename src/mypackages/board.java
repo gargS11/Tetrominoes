@@ -7,15 +7,15 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.SGR;
 
 public class board{
-    private final int R = 16;  //fixed board length
-    private final int C = 15;  //fixed board width
+    private final int R = 18;  //fixed board length
+    private final int C = 18;  //fixed board width
     public char mat[][];      //board matrix
     public int colsOccupied[];//arr to record how many columns in each row are occupied
 
     //initializing the board through the constructor
     public board()
     {
-        this.mat = new char[20][15];
+        this.mat = new char[R][C];
         this.colsOccupied = new int[R-1];
 
         for(int i = 0; i < C; i++)
@@ -26,14 +26,13 @@ public class board{
             for(int j = 1; j < C-1; j++)
                 mat[i][j] = ' ';         
     }
-    public int getRows()
-    {
+    public int getRows(){
         return this.R;
     }
-    public int getCols()
-    {
+    public int getCols(){
         return this.C;
     }
+
     //adding block to the board
     public void moveToBoard(int block[][], int offx, int offy)
     {
@@ -44,18 +43,9 @@ public class board{
             mat[x][y] = '+';
         }
     }
-    //displaying board
-    /*public void display(){
-        for(int i = 0; i < R; i++){
-            for(int j = 0; j < C; j++)
-                System.out.print(" " + mat[i][j]);
-            System.out.println();
-        }    
-    }*/
     
     //putting spaces at the board in req places
-    public void makePrevSpace(int block[][], int prevx, int prevy)
-    {
+    public void makePrevSpace(int block[][], int prevx, int prevy){
         int x, y;
         for(int i = 0; i < 4; i++) //putting spaces at the prev position of the block
         {
@@ -86,6 +76,7 @@ public class board{
         }   
         return true;  //else return true
     }
+
     //checking if any row is completely filled,if yes,then removing it and incrementing score
     public void updateColsOccupied(int block[][], int prevx, int prevy)
     {
@@ -103,7 +94,6 @@ public class board{
             x = R-2;
         int flag = 0;
         int temp = 1; 
-        System.out.println("Shifting x = " + x);   
         for(int i = x; i > 0 ; i--)
         {
             if(colsOccupied[i] == C-2)
@@ -145,16 +135,8 @@ public class board{
         }
         return score;
     }
-    public void displayColsOcuupied()
-    {
-        for(int i = 0; i < R-1; i++)
-        {
-            System.out.print(colsOccupied[i] + " ");
-        }
-        System.out.println();
-    }
-    public void setStackBoard(char mat[][])
-    {
+    
+    public void setStackBoard(char mat[][]){
         for(int i = 0; i < R; i++)
         {
             for(int j = 0; j < C; j++)
@@ -163,45 +145,14 @@ public class board{
             }
         }
     }
-    public void setStackColsOccupied(int colsOccupied[])
-    {
+    public void setStackColsOccupied(int colsOccupied[]){
         for(int i = 0; i < R-1; i++)
         {
             this.colsOccupied[i] = colsOccupied[i];
         }
     }
-    /*public void displayBoard() throws IOException {
-		this.pasteShape();
-		this.terminal.clearScreen();
-		int i, j;
-		int cols = this.board.getCols(), rows = this.board.getRows();
-		for(i = 0, cols += 2; i < cols; i++) {
-			this.terminal.putCharacter('-');
-		}
-		this.terminal.putCharacter('\n');
-
-		for(i = 0, cols -= 2; i < rows; i++) {
-			this.terminal.putCharacter('|');
-			for(j = 0; j < cols; j++) {
-				if(this.board.get(i, j)) {
-					this.terminal.putCharacter('*');
-				} else {
-					this.terminal.putCharacter(' ');
-				}
-			}
-			this.terminal.putCharacter('|');
-			this.terminal.putCharacter('\n');
-		}
-
-		for(i = 0, cols += 2; i < cols; i++) {
-			this.terminal.putCharacter('-');
-		}
-
-		this.terminal.putCharacter('\n');
-		this.terminal.flush();
-		this.clearShape();
-    }*/
-    public void display(Terminal terminal,TextGraphics textGraphics,int score)throws IOException
+    public void display(Terminal terminal,TextGraphics textGraphics,int score, int play)
+                        throws IOException
     {
         terminal.clearScreen();
         for(int i = 0; i < R; i++)
@@ -211,12 +162,14 @@ public class board{
             terminal.putCharacter('\n');
         }
         terminal.putCharacter('\n');
-        if(score >= 0){
+        if(play == 1){
             String s = "Score : " + Integer.toString(score);
-            textGraphics.putString(0, C+2, s, SGR.BOLD);
+            textGraphics.putString(0, C+1, s, SGR.ITALIC);
         }
         else{
             textGraphics.putString(3, C/2, "GAME OVER", SGR.BOLD);
+            String s = "Final Score : " + Integer.toString(score);
+            textGraphics.putString(0, C+1, s, SGR.BOLD); 
         }
         terminal.flush();
     }
