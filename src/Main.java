@@ -97,8 +97,12 @@ public class Main{
             KeyType key;
             KeyStroke ks;
             try {
-                ks = getBlockingInput(terminal); //getting input in form of KeyStroke
-                key = ks.getKeyType();           //getting KeyType of KeyStroke
+                if(option == 's')
+                    Thread.sleep(400);  //waiting for 400 ms
+                ks = getNonBlockingInput(terminal);  //getting input in form of KeyStroke
+                if(ks == null)    //if there is no input for 400ms then option is set to 's'
+                    option = 's'; //i.e. block will move down
+                key = ks.getKeyType();     //getting KeyType of KeyStroke
                 if(key == KeyType.ArrowLeft) {
                     option = 'a';
                 } else if(key == KeyType.ArrowRight) {
@@ -238,11 +242,7 @@ public class Main{
     }
     
     //getting input in form of KeyStroke and returning it
-    public static KeyStroke getBlockingInput(Terminal terminal) throws IOException {
-		return terminal.readInput();
-	}
-
-	public static KeyStroke getNonBlockingInput(Terminal terminal) throws IOException {
+    public static KeyStroke getNonBlockingInput(Terminal terminal) throws IOException {
 		return terminal.pollInput();
 	}
 
